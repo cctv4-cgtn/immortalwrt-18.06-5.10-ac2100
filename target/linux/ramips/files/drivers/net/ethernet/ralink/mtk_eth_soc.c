@@ -726,19 +726,11 @@ next_frag:
 	/* TX SG offload */
 	nr_frags = skb_shinfo(skb)->nr_frags;
 	for (i = 0; i < nr_frags; i++) {
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 4, 0)
-		struct skb_frag_struct *frag;
-#else
 		skb_frag_t *frag;
-#endif
 
 		frag = &skb_shinfo(skb)->frags[i];
 		if (fe_tx_dma_map_page(ring, &st, skb_frag_page(frag),
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 4, 0)
-				       frag->page_offset, skb_frag_size(frag)))
-#else
 				       skb_frag_off(frag), skb_frag_size(frag)))
-#endif
 			goto err_dma;
 	}
 
@@ -773,11 +765,7 @@ next_frag:
 			netif_wake_queue(dev);
 	}
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 2, 0)
-	if (netif_xmit_stopped(netdev_get_tx_queue(dev, 0)) || !head->xmit_more)
-#else
 	if (netif_xmit_stopped(netdev_get_tx_queue(dev, 0)) || !netdev_xmit_more())
-#endif
 		fe_reg_w32(ring->tx_next_idx, FE_REG_TX_CTX_IDX0);
 
 	return 0;
@@ -836,22 +824,14 @@ static inline int fe_cal_txd_req(struct sk_buff *skb)
 {
 	struct sk_buff *head = skb;
 	int i, nfrags = 0;
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 4, 0)
-	struct skb_frag_struct *frag;
-#else
 	skb_frag_t *frag;
-#endif
 
 next_frag:
 	nfrags++;
 	if (skb_is_gso(skb)) {
 		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
 			frag = &skb_shinfo(skb)->frags[i];
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 4, 0)
-			nfrags += DIV_ROUND_UP(frag->size, TX_DMA_BUF_LEN);
-#else
 			nfrags += DIV_ROUND_UP(skb_frag_size(frag), TX_DMA_BUF_LEN);
-#endif
 		}
 	} else {
 		nfrags += skb_shinfo(skb)->nr_frags;
@@ -908,8 +888,6 @@ static int fe_poll_rx(struct napi_struct *napi, int budget,
 	u8 *data, *new_data;
 	struct fe_rx_dma *rxd, trxd;
 	int done = 0, pad;
-
-	fe_reg_w32(rx_intr, FE_REG_FE_INT_STATUS);
 
 	if (netdev->features & NETIF_F_RXCSUM)
 		checksum_bit = soc->checksum_bit;
@@ -1003,6 +981,9 @@ release_desc:
 		done++;
 	}
 
+	if (done < budget)
+		fe_reg_w32(rx_intr, FE_REG_FE_INT_STATUS);
+
 	return done;
 }
 
@@ -1016,8 +997,6 @@ static int fe_poll_tx(struct fe_priv *priv, int budget, u32 tx_intr,
 	int done = 0;
 	u32 idx, hwidx;
 	struct fe_tx_ring *ring = &priv->tx_ring;
-
-	fe_reg_w32(tx_intr, FE_REG_FE_INT_STATUS);
 
 	idx = ring->tx_free_idx;
 	hwidx = fe_reg_r32(FE_REG_TX_DTX_IDX0);
@@ -1042,7 +1021,9 @@ static int fe_poll_tx(struct fe_priv *priv, int budget, u32 tx_intr,
 	if (idx == hwidx) {
 		/* read hw index again make sure no new tx packet */
 		hwidx = fe_reg_r32(FE_REG_TX_DTX_IDX0);
-		if (idx != hwidx)
+		if (idx == hwidx)
+			fe_reg_w32(tx_intr, FE_REG_FE_INT_STATUS);
+		else
 			*tx_again = 1;
 	} else {
 		*tx_again = 1;
@@ -1401,6 +1382,7 @@ static int __init fe_init(struct net_device *dev)
 {
 	struct fe_priv *priv = netdev_priv(dev);
 	struct device_node *port;
+	const char *mac_addr;
 	int err;
 
 	if (priv->soc->reset_fe)
