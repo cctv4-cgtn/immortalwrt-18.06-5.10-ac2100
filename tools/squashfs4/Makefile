@@ -1,29 +1,36 @@
 #
-# Copyright (C) 2009-2012 OpenWrt.org
+# Copyright (C) 2006-2012 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=squashfskit4
-PKG_VERSION:=4.14
-PKG_RELEASE:=3
-PKG_SOURCE:=squashfskit-v$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://github.com/squashfskit/squashfskit/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=5761aaa3aedc4f7112b708367d891c9abdc1ffea972e3fe47923ddba23984d95
+PKG_NAME:=squashfs4
+PKG_CPE_ID:=cpe:/a:phillip_lougher:squashfs
+PKG_VERSION:=4.7.4
+PKG_RELEASE=2
 
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/squashfskit-v$(PKG_VERSION)
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/plougher/squashfs-tools
+PKG_SOURCE_DATE:=2025-11-10
+PKG_SOURCE_VERSION:=53e5a67aac42e0bc9ad4a249156d7d549ce7436c
+PKG_MIRROR_HASH:=7ce390d95af4b7b4ce768cec18aeb9ac61b8ca413d0ced2c42a81446d9dd8690
+
+HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
 define Host/Compile
 	+$(HOST_MAKE_VARS) \
-	$(MAKE) -C $(HOST_BUILD_DIR)/squashfs-tools \
+	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR)/squashfs-tools \
+		LZ4_SUPPORT=0 \
+		LZO_SUPPORT=0 \
+		ZSTD_SUPPORT=1 \
+		GZIP_SUPPORT=1 \
 		XZ_SUPPORT=1 \
 		LZMA_XZ_SUPPORT=1 \
-		XATTR_SUPPORT=1 \
-		LZMA_LIB="$(STAGING_DIR_HOST)/lib/liblzma.a" \
+		XZ_EXTENDED_OPTIONS=1 \
 		EXTRA_CFLAGS="-I$(STAGING_DIR_HOST)/include" \
 		mksquashfs unsquashfs
 endef
