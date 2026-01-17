@@ -75,7 +75,6 @@ $(curdir)/sdcc/compile := $(curdir)/bison/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
 $(curdir)/squashfs4/compile := $(curdir)/xz/compile $(curdir)/zlib/compile $(curdir)/zstd/compile
 $(curdir)/zlib/compile := $(curdir)/cmake/compile
-$(curdir)/zstd/compile := $(curdir)/meson/compile
 
 ifneq ($(HOST_OS),Linux)
   $(curdir)/squashfs4/compile += $(curdir)/coreutils/compile
