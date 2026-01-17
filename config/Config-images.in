@@ -170,13 +170,16 @@ menu "Target Images"
 
 		choice
 			prompt "compression"
-			default TARGET_UBIFS_COMPRESSION_ZLIB
+			default TARGET_UBIFS_COMPRESSION_ZSTD
 			depends on TARGET_ROOTFS_UBIFS
 			help
 			  Select compression type
 
 			config TARGET_UBIFS_COMPRESSION_NONE
 				bool "none"
+
+			config TARGET_UBIFS_COMPRESSION_ZSTD
+				bool "zstd"
 
 			config TARGET_UBIFS_COMPRESSION_LZO
 				bool "lzo"

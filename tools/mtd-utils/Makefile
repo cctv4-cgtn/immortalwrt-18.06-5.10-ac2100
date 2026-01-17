@@ -35,7 +35,6 @@ HOST_CONFIGURE_ARGS+= \
 	--disable-tests \
 	--without-crypto \
 	--without-xattr \
-	--without-zstd \
 	--without-lzo
 
 HOST_MAKE_FLAGS += \
