@@ -96,9 +96,6 @@ EROFSOPT += -Efragments,dedupe,ztailpacking -Uclear --all-root
 EROFSOPT += $(if $(SOURCE_DATE_EPOCH),-T$(SOURCE_DATE_EPOCH) --ignore-mtime)
 EROFSOPT += $(if $(CONFIG_SELINUX),,-x-1)
 EROFSCOMP := lz4hc,12
-ifeq ($(CONFIG_EROFS_FS_ZIP_ZSTD),y)
-EROFSCOMP := zstd,19
-endif
 
 fs-types-$(CONFIG_TARGET_ROOTFS_SQUASHFS) += squashfs
 fs-types-$(CONFIG_TARGET_ROOTFS_JFFS2) += $(addprefix jffs2-,$(JFFS2_BLOCKSIZE))
