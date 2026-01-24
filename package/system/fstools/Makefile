@@ -8,19 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fstools
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL=$(PROJECT_GIT)/project/fstools.git
-PKG_MIRROR_HASH:=41c9c51d193f5150db67fcd898b6ea904b88476c94cdfd021d81e2711441b430
-PKG_SOURCE_DATE:=2021-05-16
-PKG_SOURCE_VERSION:=3d40a1b591cd569f95891116cd033b496de0f92b
+PKG_MIRROR_HASH:=b579796bd410765df8a5c0957f89e01256e96bdcfd5cdcae61c71949a273ce03
+PKG_SOURCE_DATE:=2025-07-05
+PKG_SOURCE_VERSION:=e8cd820cdbb8fba990fd79efda90c5dc10d8e45c
 CMAKE_INSTALL:=1
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=
 
 PKG_USE_MIPS16:=0
+PKG_BUILD_FLAGS:=no-mips16
 PKG_FLAGS:=nonshared
 
 PKG_BUILD_DEPENDS := util-linux
@@ -31,7 +32,6 @@ PKG_MAINTAINER:=John Crispin <john@phrozen.org>
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lrt)
 CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_UBIFS_EXTROOT),-DCMAKE_UBIFS_EXTROOT=y)
 CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_OVL_MOUNT_FULL_ACCESS_TIME),-DCMAKE_OVL_MOUNT_FULL_ACCESS_TIME=y)
 CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_OVL_MOUNT_COMPRESS_ZLIB),-DCMAKE_OVL_MOUNT_COMPRESS_ZLIB=y)
@@ -39,7 +39,7 @@ CMAKE_OPTIONS += $(if $(CONFIG_FSTOOLS_OVL_MOUNT_COMPRESS_ZLIB),-DCMAKE_OVL_MOUN
 define Package/fstools
   SECTION:=base
   CATEGORY:=Base system
-  DEPENDS:=+ubox +USE_GLIBC:librt +NAND_SUPPORT:ubi-utils
+  DEPENDS:=+ubox +NAND_SUPPORT:ubi-utils
   TITLE:=OpenWrt filesystem tools
   MENU:=1
 endef
@@ -75,26 +75,31 @@ define Package/snapshot-tool
   DEPENDS:=+libubox +fstools
 endef
 
+define Package/block-mount/conffiles
+/etc/config/fstab
+endef
+
 define Package/block-mount
   SECTION:=base
   CATEGORY:=Base system
   TITLE:=Block device mounting and checking
-  DEPENDS:=+ubox +libubox +libuci +libblobmsg-json +libjson-c +fstools
+  DEPENDS:=+ubox +libubox +libuci +libblobmsg-json +libjson-c
 endef
 
 define Package/blockd
   SECTION:=base
   CATEGORY:=Base system
   TITLE:=Block device automounting
-  DEPENDS:=+block-mount +libubus +kmod-fs-autofs4 +libblobmsg-json +libjson-c
+  DEPENDS:=+block-mount +fstools +libubus +kmod-fs-autofs4 +libblobmsg-json +libjson-c
 endef
 
 define Package/fstools/install
 	$(INSTALL_DIR) $(1)/sbin $(1)/lib
 
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{mount_root,jffs2reset} $(1)/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{mount_root,factoryreset} $(1)/sbin/
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libfstools.so $(1)/lib/
-	$(LN) jffs2reset $(1)/sbin/jffs2mark
+	$(LN) factoryreset $(1)/sbin/jffs2mark
+	$(LN) factoryreset $(1)/sbin/jffs2reset
 endef
 
 define Package/snapshot-tool/install
