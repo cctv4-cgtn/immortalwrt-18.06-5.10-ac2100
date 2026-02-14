@@ -288,9 +288,13 @@ foreach my $mirror (@ARGV) {
 		# push @mirrors, "https://mirrors.tuna.tsinghua.edu.cn/gnu/$1";
 		# push @mirrors, "https://mirrors.cqu.edu.cn/gnu/$1";
 		# push @mirrors, "https://mirrors.ustc.edu.cn/gnu/$1";
-		push @mirrors, "https://mirror.facebook.net/gnu/$1";
-		push @mirrors, "https://mirror.fcix.net/gnu/$1";
-		push @mirrors, "https://mirrors.ocf.berkeley.edu/gnu/$1";
+      if (rand() < 0.33) {
+		       push @mirrors, "https://mirror.facebook.net/gnu/$1";
+      } elsif (rand() < 0.33) {
+           push @mirrors, "https://mirror.fcix.net/gnu/$1";
+      } else {
+		       push @mirrors, "https://mirrors.ocf.berkeley.edu/gnu/$1";
+      }
 		# push @mirrors, "http://www.nic.funet.fi/pub/gnu/gnu/$1";
 		# push @mirrors, "http://mirror.internode.on.net/pub/gnu/$1";
 		# push @mirrors, "http://mirror.navercorp.com/gnu/$1";
@@ -314,10 +318,10 @@ foreach my $mirror (@ARGV) {
 		}
 		foreach my $dir (@extra) {
 			# push @mirrors, "https://mirrors.ustc.edu.cn/kernel.org/$dir";
-			# push @mirrors, "https://mirror.iscas.ac.cn/kernel.org/$dir";
+			push @mirrors, "https://cdn.kernel.org/pub/$dir";
 			push @mirrors, "https://mirror.facebook.net/kernel.org/pub/$dir";
 			push @mirrors, "https://mirrors.mit.edu/kernel/$dir";
-			push @mirrors, "https://mirrors.edge.kernel.org/pub/$dir";
+			# push @mirrors, "https://mirrors.edge.kernel.org/pub/$dir";
 			# push @mirrors, "http://ftp.nara.wide.ad.jp/pub/kernel.org/$dir";
 			# push @mirrors, "http://www.ring.gr.jp/archives/linux/kernel.org/$dir";
 			# push @mirrors, "ftp://ftp.riken.jp/Linux/kernel.org/$dir";
