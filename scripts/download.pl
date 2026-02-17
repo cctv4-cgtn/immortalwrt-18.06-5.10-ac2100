@@ -290,7 +290,7 @@ foreach my $mirror (@ARGV) {
 		# push @mirrors, "https://mirrors.ustc.edu.cn/gnu/$1";
       if (rand() < 0.33) {
 		       push @mirrors, "https://mirror.facebook.net/gnu/$1";
-      } elsif (rand() < 0.33) {
+      } elsif (rand() < 0.493) {
            push @mirrors, "https://mirror.fcix.net/gnu/$1";
       } else {
 		       push @mirrors, "https://mirrors.ocf.berkeley.edu/gnu/$1";
@@ -344,10 +344,10 @@ foreach my $mirror (@ARGV) {
 }
 
 # push @mirrors, 'https://mirror01.download.immortalwrt.eu.org';
+push @mirrors, 'https://sources.cdn.openwrt.org';
 push @mirrors, 'https://mirror2.immortalwrt.org/sources';
 push @mirrors, 'https://mirror.immortalwrt.org/sources';
 # push @mirrors, 'https://sources.cdn.immortalwrt.org';
-push @mirrors, 'https://sources.cdn.openwrt.org';
 push @mirrors, 'https://sources.openwrt.org';
 push @mirrors, 'https://mirror2.openwrt.org/sources';
 

@@ -11,11 +11,9 @@ PKG_CPE_ID:=cpe:/a:phillip_lougher:squashfs
 PKG_VERSION:=4.7.4
 PKG_RELEASE=2
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/plougher/squashfs-tools
-PKG_SOURCE_DATE:=2025-11-10
-PKG_SOURCE_VERSION:=53e5a67aac42e0bc9ad4a249156d7d549ce7436c
-PKG_MIRROR_HASH:=7ce390d95af4b7b4ce768cec18aeb9ac61b8ca413d0ced2c42a81446d9dd8690
+PKG_SOURCE:=squashfs-tools-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/plougher/squashfs-tools/releases/download/$(PKG_VERSION)/
+PKG_HASH:=91c49f9a1ed972ad00688a38222119e2baf49ba74cf5fda05729a79d7d59d335
 
 HOST_BUILD_PARALLEL:=1
 
