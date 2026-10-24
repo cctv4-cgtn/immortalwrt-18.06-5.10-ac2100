@@ -1,0 +1,25 @@
+From bafcb3caa936ac0d5fb93cb2b7c9a691debe1b05 Mon Sep 17 00:00:00 2001
+From: cctv4-cgtn <a20118189@gmail.com>
+Date: Sat, 24 Oct 2026 19:23:27 +0800
+Subject: [PATCH] mips: change default ZSTD22 compressed level to 19
+
+---
+ arch/mips/boot/compressed/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index eae0fad..0c6f84f 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -76,7 +76,7 @@ tool_$(CONFIG_KERNEL_LZ4)     = lz4
+ tool_$(CONFIG_KERNEL_LZMA)    = lzma
+ tool_$(CONFIG_KERNEL_LZO)     = lzo
+ tool_$(CONFIG_KERNEL_XZ)      = xzkern
+-tool_$(CONFIG_KERNEL_ZSTD)    = zstd22
++tool_$(CONFIG_KERNEL_ZSTD)    = zstd
+ 
+ targets += vmlinux.bin.z
+ $(obj)/vmlinux.bin.z: $(obj)/vmlinux.bin FORCE
+-- 
+2.55.0
+
