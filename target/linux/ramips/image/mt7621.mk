@@ -1831,7 +1831,7 @@ define Device/xiaomi_nand_separate_zImage
   $(Device/dsa-migration)
   DEVICE_VENDOR := Xiaomi
   DEVICE_PACKAGES := uboot-envtools
-  KERNEL := kernel-bin | append-dtb-elf | uImage none
+  KERNEL := kernel-bin | append-dtb-elf | zboot-strip-to-bin | uImage none
   BLOCKSIZE := 128k
   PAGESIZE := 2048
   KERNEL_SIZE := 4096k

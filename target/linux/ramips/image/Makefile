@@ -211,6 +211,12 @@ define Device/uimage-lzma-loader
   KERNEL := kernel-bin | append-dtb | lzma | loader-kernel | uImage none
 endef
 
+define Build/zboot-strip-to-bin
+	$(TARGET_CROSS)objcopy -O binary \
+		-R .reginfo -R .note -R .comment -R .mdebug -R .MIPS.abiflags \
+		-S $@
+endef
+
 include $(SUBTARGET).mk
 
 $(eval $(call BuildImage))
