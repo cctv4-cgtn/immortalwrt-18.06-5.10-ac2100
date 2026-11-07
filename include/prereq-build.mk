@@ -148,7 +148,7 @@ $(eval $(call SetupHostCommand,wget,Please install GNU 'wget', \
 	wget --version | grep GNU))
 
 $(eval $(call SetupHostCommand,install,Please install GNU 'install', \
-	install --version | grep GNU, \
+	install --version | grep 'GNU\|uutils', \
 	ginstall --version | grep GNU))
 
 $(eval $(call SetupHostCommand,perl,Please install Perl 5.x, \
@@ -157,6 +157,10 @@ $(eval $(call SetupHostCommand,perl,Please install Perl 5.x, \
 $(eval $(call CleanupPython2))
 
 $(eval $(call SetupHostCommand,python,Please install Python >= 3.6, \
+	python3.14 -V 2>&1 | grep 'Python 3', \
+	python3.13 -V 2>&1 | grep 'Python 3', \
+	python3.12 -V 2>&1 | grep 'Python 3', \
+	python3.11 -V 2>&1 | grep 'Python 3', \
 	python3.10 -V 2>&1 | grep 'Python 3', \
 	python3.9 -V 2>&1 | grep 'Python 3', \
 	python3.8 -V 2>&1 | grep 'Python 3', \
@@ -165,6 +169,10 @@ $(eval $(call SetupHostCommand,python,Please install Python >= 3.6, \
 	python3 -V 2>&1 | grep -E 'Python 3\.[6-9]\.?'))
 
 $(eval $(call SetupHostCommand,python3,Please install Python >= 3.6, \
+	python3.14 -V 2>&1 | grep 'Python 3', \
+	python3.13 -V 2>&1 | grep 'Python 3', \
+	python3.12 -V 2>&1 | grep 'Python 3', \
+	python3.11 -V 2>&1 | grep 'Python 3', \
 	python3.10 -V 2>&1 | grep 'Python 3', \
 	python3.9 -V 2>&1 | grep 'Python 3', \
 	python3.8 -V 2>&1 | grep 'Python 3', \
