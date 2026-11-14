@@ -20,7 +20,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_REAL_
 
 PKG_FIXUP:=libtool libtool-abiver
 PKG_INSTALL:=1
-PKG_BUILD_FLAGS:=no-mips16 lto
+PKG_USE_MIPS16:=0
 PKG_BUILD_PARALLEL:=1
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSING COPYING
@@ -123,8 +123,11 @@ endef
 TARGET_CFLAGS += \
 	$(FPIC) \
 	-fomit-frame-pointer \
+	-flto \
 	-DFP_MAX_BITS=8192 \
 	$(if $(CONFIG_WOLFSSL_ALT_NAMES),-DWOLFSSL_ALT_NAMES)
+
+TARGET_LDFLAGS += -flto
 
 # --enable-stunnel needed for OpenSSL API compatibility bits
 CONFIGURE_ARGS += \
